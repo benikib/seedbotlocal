@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seedbot/components/IconImage.dart';
+import 'package:seedbot/seedbot/ui/pages/MoveCommand/automatique/AutoCmdPage.dart';
 import 'package:seedbot/seedbot/ui/pages/parametrerobot/ParametrerobotPage.dart';
 import 'package:seedbot/seedbot/ui/pages/wifi/ScanWifi.dart';
 import 'package:seedbot/utils/MyColor.dart';
@@ -174,16 +175,16 @@ Widget _attente() {
                     showDialog<String>(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: Center(child: const TextSimple(color: Colors.black, fontSize: 20, bold: true, text: 'MODE',)),
-                        content: TextSimple(color: Colors.black, fontSize: 20,  text: 'Choissez le mode pour commander',),
+                        title: const Center(child: const TextSimple(color: Colors.black, fontSize: 20, bold: true, text: 'MODE',)),
+                        content: const TextSimple(color: Colors.black, fontSize: 20,  text: 'Choissez le mode pour commander',),
                         actions: <Widget>[
                           TextButton(
-                            onPressed: () { Navigator.push(context, MaterialPageRoute(builder:(ctx)=> MoveCommandPage() ));},
-                            child: TextSimple(text: 'Manuelle', color : MyColor.c4,),
+                            onPressed: () { Navigator.push(context, MaterialPageRoute(builder:(ctx)=>  MoveCmdPage() ));},
+                            child: const TextSimple(text: 'Manuelle', color : MyColor.c4,),
                           ),
                           TextButton(
-                            onPressed: () => Navigator.pop(context, 'AutoCmdPage'),
-                            child: TextSimple(text: 'Automatique', color : MyColor.c3,),
+                            onPressed: () { Navigator.push(context, MaterialPageRoute(builder:(ctx)=> AutoCmdPage() ));},
+                            child: const  TextSimple(text: 'Automatique', color : MyColor.c3,),
                           ),
                         ],
                       ),
@@ -192,7 +193,7 @@ Widget _attente() {
 
                   child: Padding(
                     padding: const EdgeInsets.symmetric( horizontal: 8.0,vertical: 8.0 ),//EdgeInsets.all(40.0),
-                    child: Container(
+                    child:  Container(
 
                         child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
