@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../business/interactor/SetSolUseCase.dart';
+import '../../../../business/interactor/SetSolUseCase.dart';
 import '../../../../business/interactor/seedbotInteractor.dart';
 import 'MoveCommandState.dart';
 
@@ -35,8 +37,36 @@ class MoveCommandCtrl extends _$MoveCommandCtrl {
   }
   void connectId(String id) async{
     var usecase   = ref.watch(seedbotInteractorProvider).connectIdUSeCase;
-    var value = await usecase.deconnexion(id);
+    var value = await usecase.run(id);
     print("ListAppareillConnectID $value");}
 
 
+
+
+void deconnexion(String id) async{
+  var usecase   = ref.watch(seedbotInteractorProvider).deconnexionUseCase;
+  var value = await usecase.run(id);
+  print("deconnexion ctrl $value");}
+
+
+  void batterie(String id) async{
+    state = state.copyWith(isLoading: true);
+    var usecase   = ref.watch(seedbotInteractorProvider).batterieUseCase;
+    var value = await usecase.run(id);
+    final regex = RegExp(r'\d+');
+    final match = regex.firstMatch(value);
+    final numberString = match?.group(0);
+    state = state.copyWith(isLoading: false, batterie: numberString);
+    print("deconnexion ctrl $value");}
+
+
+
+void SetSol(String id) async{
+  state = state.copyWith(isLoading: true);
+  var usecase   = ref.watch(seedbotInteractorProvider).setSolUseCase;
+ await usecase.run(id);
+
+  }
+
 }
+

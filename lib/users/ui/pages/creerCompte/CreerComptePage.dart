@@ -27,7 +27,8 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
   var login = TextEditingController();
   var email = TextEditingController();
   var password = TextEditingController();
-  var confirmPassword = TextEditingController();
+  var PasswordConfirm = TextEditingController();
+
   bool pswdVisible = false;
   bool etat = false;
 
@@ -49,10 +50,9 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
               child: Column(
                 children: [
                   if(state) CircularProgressIndicator(),
-
+                  _logo(),
                   _titreText(),
                   SizedBox(height: 20),
-                  _usernameField(),
                   SizedBox(height: 10),
                   _emailField(),
                   SizedBox(height: 10),
@@ -74,8 +74,13 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
     );
   }
 
-  Widget _logo() {
-    return ImageAsset();
+  Widget _logo(){
+    return   Container(
+      padding: const EdgeInsets.only(top:150),
+      child: ImageAsset(file: "assets/images/logo_seedbot_2.png"),
+
+
+    );
   }
 
   Widget _titreText() {
@@ -83,15 +88,7 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
       "Creer un compte", style: GoogleFonts.montserrat(fontSize: 30,),);
   }
 
-  Widget _usernameField() {
-    return TextInput(
-      hintText: "Nom complet",
-      controller: login,
-      prefixIcon: Icons.person,
 
-
-    );
-  }
 
   Widget _emailField() {
     return TextInput(
@@ -120,7 +117,7 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
 
   Widget _confirmPasswordField() {
     return TextInput(
-      controller: confirmPassword,
+      controller: PasswordConfirm,
       hintText: "Confirmer mot de passe",
       obscureText: pswdVisible,
       prefixIcon: Icons.lock,
@@ -151,10 +148,10 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
     return Button(text: "Creer Compte", onPressed: () async {
       var ctrl = ref.read(creerCompteCtrlProvider.notifier);
       Map<String, String> data = {
-        "firstname": login.text,
-        "lastname": login.text,
+
         "email": email.text,
-        "password": password.text
+        "password": password.text,
+        "passwordConfirmation": PasswordConfirm.text
       };
       var res = await ctrl.creerCompte(data);
       if (true) {

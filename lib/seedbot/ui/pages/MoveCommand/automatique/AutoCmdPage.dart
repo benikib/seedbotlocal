@@ -1,205 +1,238 @@
-import 'dart:convert';
-
+import 'package:circular_seek_bar/circular_seek_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
-class DistanceWidget extends StatelessWidget {
-  final LatLng start;
-  final LatLng end;
-
-  DistanceWidget({required this.start, required this.end});
-
-  double calculateDistance() {
-    return Geolocator.distanceBetween(
-      start.latitude,
-      start.longitude,
-      end.latitude,
-      end.longitude,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double distance = calculateDistance();
-    return Scaffold(
-      appBar:  AppBar(title: Text(  'Seedbot'),),
-      body: Container(
-        margin: EdgeInsets.all(50),
-        child: Positioned(
-          left: (start.longitude + end.longitude) / 2,
-          top: (start.latitude + end.latitude) / 2,
-          child: Container(
-            padding: EdgeInsets.all(4.0),
-            color: Colors.white,
-            child: Text(
-              'Distance: ${distance.toStringAsFixed(2)} m',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+import '../../../../../components/IconImage.dart';
+import '../../../../../components/TextSimple.dart';
+import '../../../../../utils/MyColor.dart';
+import '../../parametrerobot/ParametrerobotPage.dart';
 
 class AutoCmdPage extends ConsumerStatefulWidget {
-  final List<String> bloodBanks = ['name', 'latitude', 'longitude'];
-
- // LocalisationBanquePage({required this.bloodBanks});
+  const AutoCmdPage({super.key});
 
   @override
-  ConsumerState<AutoCmdPage> createState() =>
-      _AutoCmdPage();
+  ConsumerState createState() => _AutocmdpageState();
 }
 
-class _AutoCmdPage
-    extends ConsumerState<AutoCmdPage> {
-  List<Marker> markers = [];
-  List<Polyline> polylines = [];
-  List<Widget> distanceWidgets = [];
-  LatLng? currentPosition;
-  final MapController mapController = MapController();
+class _AutocmdpageState extends ConsumerState<AutoCmdPage> {
 
-  Future<LatLng?> _getCurrentLocation() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      return LatLng(position.latitude, position.longitude);
-    } else {
-      return null;
-    }
-  }
-
-  Future<List<LatLng>> getRoute(LatLng start, LatLng end) async {
-    final response = await http.get(
-      Uri.parse(
-          'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?geometries=geojson'),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<LatLng> route = [];
-      if (data['routes'].isNotEmpty) {
-        var coordinates = data['routes'][0]['geometry']['coordinates'];
-        for (var coord in coordinates) {
-          route.add(LatLng(coord[1], coord[0]));
-        }
-      }
-      return route;
-    } else {
-      throw Exception('Failed to load route');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      var positionPhone = await _getCurrentLocation();
-      currentPosition = positionPhone;
-
-      markers.add(
-          Marker(
-        point: positionPhone ?? const LatLng(-4.4419, 15.2663),
-        width: 40.0,
-        height: 40.0,
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.redAccent,
-            border: Border.all(color: Colors.white, width: 2),
-          ),
-          child: const Icon(Icons.medical_services,
-              color: Colors.white, size: 23.0),
-        ),
-      ));
-
-      for (var bank in widget.bloodBanks) {
-        var bankPosition = LatLng(
-          double.tryParse('bank.latitude.toString()') ?? 0.0,
-          double.tryParse('bank.longitude.toString()') ?? 0.0,
-        );
-
-        markers.add(Marker(
-          point: bankPosition,
-          width: 40.0,
-          height: 40.0,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.redAccent,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: const Icon(Icons.bloodtype, color: Colors.white, size: 23.0),
-          ),
-        ));
-
-        if (currentPosition != null) {
-          List<LatLng> route = await getRoute(currentPosition!, bankPosition);
-          if (route.isNotEmpty) {
-            polylines.add(Polyline(
-              points: route,
-              strokeWidth: 4.0,
-              color: Colors.blue,
-            ));
-
-            // Utilisez le widget de distance
-            distanceWidgets.add(
-                DistanceWidget(start: currentPosition!, end: bankPosition));
-          }
-        }
-      }
-
-      if (currentPosition != null) {
-        mapController.move(currentPosition!, 15.0);
-      }
-
-      setState(() {});
-    });
-  }
-
+  final ValueNotifier<double> _valueNotifier = ValueNotifier(0);
+  double _lowerValue = 50;
+  double _upperValue = 180;
+  bool b_marche = true;
+  double _progress = 90;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: mapController,
-            options: MapOptions(
-              initialCenter: currentPosition ?? const LatLng(-4.4419, 15.2663),
-              initialZoom: 18.0,
-              minZoom: 12.0,
-              maxZoom: 15.0,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'dev.fleatet.flutter_map.example',
-              ),
-              MarkerLayer(markers: markers),
-              PolylineLayer(polylines: polylines),
-            ],
-          ),
-          ...distanceWidgets, // Ajoutez les widgets de distance ici
-        ],
+      appBar: AppBar(
+        title: Text("Seedbot"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          mapController.move(
-              currentPosition ?? const LatLng(-4.4419, 15.2663), 12.0);
-        },
-        child: Icon(
-          Icons.my_location,
-          color: Colors.white,
+      body: Container(
+        margin: EdgeInsets.all(20.0),
+        child: Column(
+
+          children: [
+
+            Container(
+              height:320 ,
+              child: CircularSeekBar(
+                  width: double.infinity,
+
+                  height: 0,
+                  progress: _progress,
+                  barWidth: 15,
+                  startAngle: 90,
+                  sweepAngle: 180,
+                  strokeCap: StrokeCap.round,
+                  progressGradientColors: const [Colors.blue, Colors.indigo, Colors.purple],
+                  dashWidth: 50,
+                  dashGap: 15,
+                  animation: true,
+                  curves: Curves.bounceOut,
+                  valueNotifier: _valueNotifier,
+                  child: Center(
+                    child: ValueListenableBuilder(
+                        valueListenable: _valueNotifier,
+                        builder: (_, double value, __) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextSimple(text:'${value} kg ',color: Colors.black, fontSize: 54, bold: true ),
+                            TextSimple(text: "Poids des semences  ", color: Colors.black, fontSize: 24,),
+                            SizedBox(height: 20,),
+                            Container(
+                              width: double.infinity,
+                              height: 50,
+
+
+                              child: ElevatedButton(onPressed: ()async{
+    final Uri _url = Uri.parse('https://flutter.dev');
+    if ( await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');}
+                              }, style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black12,
+
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                )
+                              ), child: Text("Tracer une trajetoire"),)
+
+
+
+
+
+
+                              ),
+
+                          ],
+                        )),
+                  ),
+                ),
+            ),
+
+
+
+
+
+
+
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+
+              ),
+
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+
+                      children: [
+
+
+                _shape( b_marche ? IconImage(file: "assets/images/buton_on.png",) : IconImage(file: "assets/images/button_off.png",), onTap: (){
+       // var ctrl = ref.read(moveCommandCtrlProvider.notifier);
+        //b_marche? ctrl.deconnexion("cette valeur") :ctrl.connectId("cette valeur");
+        //Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
+        setState(() {
+          b_marche = !b_marche;
+          print(b_marche);
+        });}),
+                        SizedBox(height: 10,),
+                        _shapebouton( IconImage(file: "assets/images/batterie.png",)),
+                        SizedBox(height: 10,),
+                        _shapebouton( IconImage(file: "assets/images/arret_urgence.png")),
+
+                      ],
+                    ),
+
+                    Expanded(
+
+
+
+                       child: IconImage(file: "assets/images/arret_urgence.png",color: MyColor.c5,),
+
+
+
+                    )
+                  ],
+                ),
+
+              ],
+              ),),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+
+                  _shapebouton(IconImage(onTap: () {print("semer");
+                  setState(() {
+
+
+
+                  });},file: "assets/images/seed.png",color: MyColor.c5,)),
+
+                  SizedBox(width: 5,),
+                  _shapebouton( IconImage(file: "assets/images/bouton_labourer2.png")),
+                  SizedBox(width: 5,),
+                  _shapebouton( IconImage(file: "assets/images/parametre.png",color: MyColor.c5,),onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
+                  }),
+                ],
+              ),
+            ),
+
+          ],
         ),
-        backgroundColor: Colors.redAccent,
       ),
     );
+  }
+  Widget _shapebouton(Widget imageIcon, {Function()? onTap}) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(10.0), // Espacement interne
+        shape: CircleBorder(), // Forme circulaire
+         // Couleur de fond
+        shadowColor: Colors.black45, // Couleur de l'ombre
+        elevation: 5, // Élévation (ombre portée)
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        child: imageIcon, // Icône ou image passée en argument
+      ),
+    );
+  }
+  Widget _shape(Widget imageicon, {Function()? onTap}) {
+
+
+
+    return  GestureDetector(
+      onTap: onTap,
+
+      child: Container(
+
+
+        margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+
+          color: MyColor.white,
+          boxShadow: [
+
+            BoxShadow(
+              color: Colors.black45,
+              spreadRadius: 2,
+              blurRadius: 3,
+              offset: Offset(0, 5),
+            )
+          ],
+
+          border: Border.all(
+
+
+            color: Colors.transparent,
+
+
+          ),
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        child: imageicon,
+      ),
+    );
+
+  }
+
+
+}
+Future<void> _launchUrl() async {
+  final Uri _url = Uri.parse('https://flutter.dev');
+  if ( await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
   }
 }

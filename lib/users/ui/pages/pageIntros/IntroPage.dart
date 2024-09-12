@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:seedbot/components/Button.dart';
 import 'package:seedbot/users/ui/pages/authentification/authentificationPage.dart';
+
+import '../../../../seedbot/ui/pages/home/HomePage.dart';
 
 
 
@@ -15,12 +18,26 @@ class OnBoardingPage extends StatefulWidget {
   OnBoardingPageState createState() => OnBoardingPageState();
 }
 
-class OnBoardingPageState extends State<OnBoardingPage> {
+class OnBoardingPageState extends State<OnBoardingPage> with TickerProviderStateMixin {
   final introKey = GlobalKey<IntroductionScreenState>();
+  late final AnimationController _controller;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   void _onIntroEnd(context) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      MaterialPageRoute(builder: (_) =>  HomePage()),
     );
   }
 
@@ -116,7 +133,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           title: "Title of last page - reversed",
 
           body: "Another beautiful body text for this example onboarding",
-          image: _buildImage('img2.jpg'),
 
           decoration: pageDecoration.copyWith(
             bodyFlex: 6,
@@ -160,60 +176,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
 
-  void _onBackToIntro(context) {
-    //OnBoardingPage
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const AuthentificationPage()),
-    );
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("This is the screen after Introduction"),
-            const SizedBox(height: 16.0),
-            FlutterCarousel(
-              options: CarouselOptions(
-                height: 400.0,
-                showIndicator: true,
-                slideIndicator: CircularSlideIndicator(),
-              ),
-              items: [1,2,3,4,5].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      padding:EdgeInsets.all( 20.0) ,
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(30.0),
 
-                        ),
-                        child: Text('text $i', style: TextStyle(fontSize: 16.0),)
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-              Button(text: " Connexion ", onPressed: (){_onBackToIntro(context);},),
-              Button(text: "Inscription", onPressed: (){}),
-            ],)
-
-          ],
-        ),
-      ),
-    );
-  }
-}

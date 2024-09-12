@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seedbot/users/business/interactors/AuthentificationUseCase.dart';
+import 'package:seedbot/users/business/interactors/CategoriesUseCase.dart';
 import 'package:seedbot/users/business/interactors/CreerCompteUseCase.dart';
 import 'package:seedbot/users/business/interactors/DeconnexionUseCase.dart';
 import 'package:seedbot/users/business/interactors/ForgetPassWordUseCase.dart';
@@ -14,17 +15,20 @@ class UserInteractor{
   DeconnexionUseCase deconnexionUseCase;
   ForgetPassWordUseCase forgetPassWordUseCase;
   CreerCompteUseCase creerCompteUseCase;
+  CategoriesUseCase categoriesUseCase;
 
   UserInteractor._(
       this.authentificationUseCase,
       this.deconnexionUseCase,
       this.forgetPassWordUseCase,
-      this.creerCompteUseCase
+      this.creerCompteUseCase,
+      this.categoriesUseCase
       );
 
   static buil(UserService service){
     return UserInteractor._(AuthentificationUseCase(service),DeconnexionUseCase(service),
-      ForgetPassWordUseCase(service),CreerCompteUseCase(service)
+            ForgetPassWordUseCase(service),CreerCompteUseCase(service),
+              CategoriesUseCase(service)
 
     );
   }

@@ -1,7 +1,9 @@
 
 
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 
 
 import 'package:seedbot/users/business/service/userService.dart';
@@ -20,11 +22,11 @@ class UserServiceImpleFake implements UserService{
       );
 
       if (response.statusCode == 200) {
-        print(" tokeneeeeee de gray $response.body");
-        return 'Connexion réussie';
+        print(" tokeneeeeee de gray ${response.body}");
+        return response.body.toString();
       } else {
         print(response.statusCode);
-        return 'Erreur de connexion: ${response.reasonPhrase}';
+        return 'Erreur de connexion: ${(response.body)}';
       }
     } catch (e) {
       // Handle any errors that occur during the request
@@ -54,16 +56,41 @@ class UserServiceImpleFake implements UserService{
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type ':'multipart/form-data'},
+        headers: {'Content-Type':'application/json'},
         body: jsonEncode(data),
       );
 
       if (response.statusCode == 200) {
-        print(" tokeneeeeee de gray $response.body");
-        return 'Connexion réussie';
+        print(" tokeneeeeee de gray ${response.body}");
+        return response.body.toString();
       } else {
         print(response.statusCode);
-        return 'Erreur de connexion: ${response.reasonPhrase}';
+        return 'Erreur de connexion: ${response.body}';
+      }
+    } catch (e) {
+      // Handle any errors that occur during the request
+      return 'Erreur: $e';
+    }
+  }
+
+  @override
+  Future Categories() async {
+    final url = Uri.parse(Endpoint.baseUrlCategories);
+    print(url);
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type':'application/json'},
+
+      );
+
+      if (response.statusCode == 200) {
+        print(" tokeneeeeee de gray ${response.body}");
+        return response.body.toString();
+      } else {
+        print(response.statusCode);
+        return 'Erreur de connexion: ${response.body}';
       }
     } catch (e) {
       // Handle any errors that occur during the request
@@ -73,11 +100,7 @@ class UserServiceImpleFake implements UserService{
 
 
 }
-main() async{
-  var data ={"email": "beni@gmail.com",
-    "password": "12345678",
-    "passwordConfirmation":"12345678"};
-   var res =  await UserServiceImpleFake().CreerCompte(data);
-   print(res);
+void main() {
+
 
 }

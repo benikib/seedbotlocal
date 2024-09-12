@@ -18,9 +18,9 @@ class AuthentificationCtrl extends _$AuthentificationCtrl {
 
    Future<bool>  connexion(data) async{
     state = state.copyWith(isLoading: true);
-    //var  usecase  = ref.watch(userInteractorProvider).authentificationUseCase;
-    //var res =  await  usecase.run(data);
-    //print("res :$res");
+    var  usecase  = ref.watch(userInteractorProvider).authentificationUseCase;
+    var res =  await  usecase.run(data);
+    print("res :$res");
     state = state.copyWith(isLoading: false, );
     return true;
 

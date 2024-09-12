@@ -24,24 +24,51 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       var ctrl = ref.read(moveCommandCtrlProvider.notifier);
+      ctrl.batterie('id');
 
 
     });
 
   }
 
+  void dispose() {
+
+
+    super.dispose();
+  }
   final ValueNotifier<double> _valueNotifier = ValueNotifier(0);
   double _lowerValue = 50;
   double _upperValue = 180;
-
+  bool b_marche = true;
   double _progress = 90;
+
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 2), () async {
+      var ctrl = ref.read(moveCommandCtrlProvider.notifier);
+      ctrl.batterie('id');});
+    var state = ref.watch(moveCommandCtrlProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("Seedbot"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+
+             setState(() {
+               ref.refresh(moveCommandCtrlProvider);
+               var ctrl = ref.read(moveCommandCtrlProvider.notifier);
+
+                ctrl.batterie('id');
+             });
+                // Exemple d'utilisation de Riverpod pour actualiser
+            },
+          ),
+        ],
       ),
       body: Container(
+
         margin: EdgeInsets.all(20.0),
         child: Column(
           children: [
@@ -67,7 +94,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                       builder: (_, double value, __) => Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextSimple(text:'${value.round()} kg ',color: Colors.black, fontSize: 54, bold: true ),
+                          TextSimple(text:'${state.batterie} kg ',color: Colors.black, fontSize: 54, bold: true ),
                           TextSimple(text: "Poids des semences  ", color: Colors.black, fontSize: 24,),
               
               
@@ -93,22 +120,29 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                   Column(
                     children: [
 
-                        _shape( IconImage(file: "assets/images/button_off.png",), onTap: (){
+                        _shape( b_marche ? IconImage(file: "assets/images/buton_on.png",) : IconImage(file: "assets/images/button_off.png",), onTap: (){
                           var ctrl = ref.read(moveCommandCtrlProvider.notifier);
-                          ctrl.connectId("cette valeur");
-                          Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));},),
+                          b_marche? ctrl.deconnexion("cette valeur") :ctrl.connectId("cette valeur");
+                          //Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
+                          setState(() {
+                            b_marche = !b_marche;
+                            print(b_marche);
+                          });
+                        }),
+                        TextSimple(text:b_marche ? "Off" : "On", color: Colors.black),
                         _shape( IconImage(file: "assets/images/batterie.png",)),
+                      TextSimple(text: "85", color: Colors.black),
                         _shape( IconImage(file: "assets/images/arret_urgence.png")),
 
                     ],
                   ),
 
                   Container(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(3.0),
 
 
 
-                    color: MyColor.white,
+
 
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +185,11 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                   });},file: "assets/images/seed.png",color: MyColor.c5,)),
 
                   SizedBox(width: 5,),
-                  _shape( IconImage(file: "assets/images/bouton_labourer2.png")),
+                  _shape( IconImage(file: "assets/images/bouton_labourer2.png"),onTap: (){
+                     var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                     Ctrl.SetSol("1");
+                     Ctrl.batterie("id");
+                  }),
                   SizedBox(width: 5,),
                   _shape( IconImage(file: "assets/images/parametre.png",color: MyColor.c5,),onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
@@ -181,6 +219,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
 
 
     return  GestureDetector(
+      onTap: onTap,
 
       child: Container(
 

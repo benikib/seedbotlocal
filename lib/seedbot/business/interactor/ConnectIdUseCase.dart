@@ -7,7 +7,5 @@ class ConnectIdUseCase{
   Future<String> run(String id) async{
     return service.connectId(id);
   }
-  Future<String> deconnexion(String id) async{
-    return service.deconnexion(id);
-  }
+
 }

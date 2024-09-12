@@ -124,5 +124,8 @@ class SeedbotServiceImplLocal implements SeedbotService{
 
   }
 
+void main() {
 
+
+}
   

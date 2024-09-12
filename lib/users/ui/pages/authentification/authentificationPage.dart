@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:seedbot/components/Button.dart';
 import 'package:seedbot/components/CustomAppBar.dart';
@@ -24,10 +25,30 @@ class AuthentificationPage extends ConsumerStatefulWidget {
   ConsumerState createState() => _AuthetificationPageState();
 }
 
-class _AuthetificationPageState extends ConsumerState<AuthentificationPage> {
+class _AuthetificationPageState extends ConsumerState<AuthentificationPage> with TickerProviderStateMixin {
   var login=TextEditingController();
   var password=TextEditingController();
   bool pswdVisible = false;
+  late final AnimationController _controller;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  void _onIntroEnd(context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomePage()),
+    );
+  }
 
 
 
@@ -36,7 +57,7 @@ class _AuthetificationPageState extends ConsumerState<AuthentificationPage> {
     var state = ref.watch(authentificationCtrlProvider).isLoading;
 
     return Scaffold(
-      
+
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: _creerCompte(),
@@ -47,8 +68,9 @@ class _AuthetificationPageState extends ConsumerState<AuthentificationPage> {
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
-                    if(state) CircularProgressIndicator(),
 
+                    if(state) CircularProgressIndicator(),
+                    _logo(),
                     _titreText(),
                     SizedBox(height: 30),
                     _usernameField(),
@@ -75,6 +97,7 @@ class _AuthetificationPageState extends ConsumerState<AuthentificationPage> {
   Widget _logo(){
     return   Container(
       padding: const EdgeInsets.only(top:150),
+      child: ImageAsset(file: "assets/images/logo_seedbot_2.png"),
 
 
     );

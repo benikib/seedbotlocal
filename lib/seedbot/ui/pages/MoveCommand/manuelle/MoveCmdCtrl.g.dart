@@ -6,7 +6,7 @@ part of 'MoveCmdCtrl.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$moveCommandCtrlHash() => r'41ddc64aa6bb13c23a007faea531ca1dbbba5f2f';
+String _$moveCommandCtrlHash() => r'bb3aefe067c53dd02bf18402fb9b72a5c8b09cb8';
 
 /// See also [MoveCommandCtrl].
 @ProviderFor(MoveCommandCtrl)
