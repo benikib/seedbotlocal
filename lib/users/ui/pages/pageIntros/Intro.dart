@@ -19,8 +19,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-     // var ctrl = ref.read(IntroCtrlProvider.notifier);
-      //ctrl.categories();
+      var ctrl = ref.read(introCtrlProvider.notifier);
+      ctrl.categories();
 
     });
   }
