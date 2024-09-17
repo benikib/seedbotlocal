@@ -6,5 +6,6 @@ abstract class ServiceConnectCmd {
   Future<String> abonner(data);
   Future<String> batterie(data);
   SetSol(data);
+  deplacement(data);
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:seedbot/Navigator/GoRouter.dart';
 import 'package:seedbot/seedbot/business/interactor/seedbotInteractor.dart';
 import 'package:seedbot/seedbot/business/service/SeedbotService.dart';
 import 'package:seedbot/seedbot/business/service/ServiceConnectCmd.dart';
@@ -40,13 +41,13 @@ import 'ListTileApp.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  //final dir = await getApplicationDocumentsDirectory();
+  final dir = await getApplicationDocumentsDirectory();
 // make sure it exists
- // await dir.create(recursive: true);
+  await dir.create(recursive: true);
 // build the database path
- // final dbPath = join(dir.path, 'sembast.db');
+  final dbPath = join(dir.path, 'sembast.db');
 // open the database
-  //final db = await databaseFactoryIo.openDatabase(dbPath);
+  final db = await databaseFactoryIo.openDatabase(dbPath);
 
   SeedbotService seedbotServiceImplLocal = SeedbotServiceImplLocal();
   ServiceConnectCmd  serviceConnectMqtt = ServiceConnectMqtt();
@@ -72,8 +73,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+     // routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
-      home: OnBoardingPage(),
+      home: AuthentificationPage(),
     );
   }
 }

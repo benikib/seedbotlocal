@@ -191,7 +191,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                      Ctrl.batterie("id");
                   }),
                   SizedBox(width: 5,),
-                  _shape( IconImage(file: "assets/images/parametre.png",color: MyColor.c5,),onTap: (){
+                  _shape( IconImage(file: "assets/images/config_2.png",color: MyColor.c4,),onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
                   }),
                 ],

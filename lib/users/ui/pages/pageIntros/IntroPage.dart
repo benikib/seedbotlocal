@@ -37,7 +37,7 @@ class OnBoardingPageState extends State<OnBoardingPage> with TickerProviderState
   }
   void _onIntroEnd(context) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) =>  HomePage()),
+      MaterialPageRoute(builder: (_) =>  AuthentificationPage()),
     );
   }
 

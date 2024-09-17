@@ -191,6 +191,24 @@ class ServiceConnectMqtt implements ServiceConnectCmd{
 
   }
 
+  @override
+  deplacement(data) {
+    if (this.client.connectionStatus!.state == MqttConnectionState.connected) {
+      const String topic = 'deplacement'; // Définition du topic auquel le client va s'abonner et publier.
+      client.subscribe(topic, MqttQos.atMostOnce); // Abonnement au topic avec une qualité de service "atMostOnce" (Qos 0).
+
+      final builder = MqttClientPayloadBuilder(); // Création d'un constructeur de payload pour le message MQTT.
+      builder.addString("1"); // Ajout du texte "Hello MQTT" comme payload du message.
+
+      // Publication du message sur le topic spécifié avec une qualité de service "exactlyOnce" (Qos 2).
+      client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
+    } else {
+      // Affichage d'un message d'erreur si la connexion a échoué.
+      print('ERROR: MQTT client connection failed - disconnecting, status is ${client.connectionStatus}');
+      client.disconnect(); // Déconnexion du client en cas d'échec de la connexion.
+    }
+  }
+
 
 
 

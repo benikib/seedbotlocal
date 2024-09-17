@@ -8,4 +8,10 @@ class UserServiceImplLocal implements UsersServiceLocal {
 
     return Future.value("authentification");
   }
+
+  @override
+  Future<String> recuperationUser(data) {
+    // TODO: implement recuperationUser
+    throw UnimplementedError();
+  }
 }
