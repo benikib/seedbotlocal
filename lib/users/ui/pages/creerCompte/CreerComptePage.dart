@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:seedbot/Navigator/GoRouter.dart';
 import 'package:seedbot/seedbot/ui/pages/navbar.dart';
 import 'package:seedbot/users/ui/pages/authentification/authentificationPage.dart';
 import 'package:seedbot/users/ui/pages/creerCompte/CreerCompteCtrl.dart';
@@ -168,8 +170,7 @@ class _CreerCompteState extends ConsumerState<CreerCompte> {
         children: [
           Text("Vous avez un compte ? ", style: GoogleFonts.montserrat(),),
           TextButton(onPressed: () {
-            Navigator.push(context,
-              MaterialPageRoute(builder: (ctx) => AuthentificationPage()),);
+            context.goNamed(Urls.authentification.name);
           },
               child: Text("Se connecter",
                 style: GoogleFonts.montserrat(color: MyColor.c1),))

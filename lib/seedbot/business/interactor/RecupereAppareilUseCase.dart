@@ -1,7 +1,10 @@
 
 
+import 'package:seedbot/users/business/service/usersServiceLocal.dart';
+
 import '../models/connexionAppareilModel/AppareilModel.dart';
 import '../service/SeedbotService.dart';
+
 
 class RecupereAppareilUseCase{
   SeedbotService service;

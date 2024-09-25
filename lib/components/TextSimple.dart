@@ -10,7 +10,7 @@ class TextSimple extends StatelessWidget {
   final bool? softWrap;
   final TextOverflow? overflow;
   final GestureTapCallback? onTap;
-  final Color color ;
+  final Color color  ;
   final double fontSize;
   final bool bold;
 
@@ -22,9 +22,10 @@ class TextSimple extends StatelessWidget {
     this.softWrap,
     this.overflow,
     this.onTap,
-    required this.color,
+
     this.fontSize = 15,
     this.bold = false,
+    required this.color,
     
   });
 
@@ -37,7 +38,7 @@ class TextSimple extends StatelessWidget {
         style: GoogleFonts.montserrat(
           fontWeight: bold? FontWeight.bold:FontWeight.normal,
           fontSize: fontSize,
-          color: color,
+          color: color?? Colors.black,
 
 
 

@@ -17,14 +17,15 @@ class Button extends StatelessWidget {
     required this.onPressed,
     this.backgroundColor = MyColor.c4,
     this.textColor = MyColor.white,
-    this.elevation = 4.0,
+    this.elevation = 8.0,
     this.padding = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-    this.borderRadius = 10.0,
+    this.borderRadius = 30.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 250.0,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [MyColor.c5, MyColor.c4],
@@ -35,7 +36,8 @@ class Button extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
 
-        height: 60,
+
+        height: 60.0,
 
         margin: EdgeInsets.symmetric(horizontal: 0),child:  ElevatedButton(
 

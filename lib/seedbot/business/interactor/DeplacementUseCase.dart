@@ -5,7 +5,7 @@ class DeplacementUseCase{
 ServiceConnectCmd service;
 
   DeplacementUseCase(this.service);
-  Future<String> run(data){
+  Future<String> run(String data){
     return service.deplacement(data);
   }
 }

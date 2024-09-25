@@ -52,7 +52,9 @@ class _ListAppareilConnectPageState extends ConsumerState<ListAppareilConnectPag
     return Scaffold(
 
 
-      appBar: CustomAppBar(
+      appBar: CustomAppBar
+        (
+       // etat: false,
         title: "Seedbot",
       ),
       body:  Container(
@@ -61,7 +63,7 @@ class _ListAppareilConnectPageState extends ConsumerState<ListAppareilConnectPag
           child: DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/champ_seedbdot.png"),
+                image: AssetImage("assets/images/image_arbre.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -87,7 +89,7 @@ class _ListAppareilConnectPageState extends ConsumerState<ListAppareilConnectPag
                 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                      child: TextSimple(text: "Smart service", color: Colors.black),
+                      child: TextSimple(text: "Appareil connecte", color: Colors.black),
                     ),
                     _appareils(state.data),
                 
@@ -255,7 +257,7 @@ Widget _attente() {
 
         height: 300,
         decoration: BoxDecoration(
-          color: Colors.white30,
+          color: Colors.white70,
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Column(

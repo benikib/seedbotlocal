@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:seedbot/seedbot/business/service/ServiceConnectCmd.dart';
 import  'package:mqtt_client/mqtt_client.dart' ;
 import  'package:mqtt_client/mqtt_server_client.dart' ;
@@ -174,11 +175,11 @@ class ServiceConnectMqtt implements ServiceConnectCmd{
     // Vérification de l'état de la connexion après tentative.
 
     if (this.client.connectionStatus!.state == MqttConnectionState.connected) {
-      const String topic = 'SolIn'; // Définition du topic auquel le client va s'abonner et publier.
+      const String topic = 'deplacement'; // Définition du topic auquel le client va s'abonner et publier.
     client.subscribe(topic, MqttQos.atMostOnce); // Abonnement au topic avec une qualité de service "atMostOnce" (Qos 0).
 
       final builder = MqttClientPayloadBuilder(); // Création d'un constructeur de payload pour le message MQTT.
-      builder.addString("1"); // Ajout du texte "Hello MQTT" comme payload du message.
+      builder.addString("F"); // Ajout du texte "Hello MQTT" comme payload du message.
 
       // Publication du message sur le topic spécifié avec une qualité de service "exactlyOnce" (Qos 2).
     client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
@@ -192,13 +193,14 @@ class ServiceConnectMqtt implements ServiceConnectCmd{
   }
 
   @override
-  deplacement(data) {
+  deplacement(String data) {
+
     if (this.client.connectionStatus!.state == MqttConnectionState.connected) {
-      const String topic = 'deplacement'; // Définition du topic auquel le client va s'abonner et publier.
+      const String topic = 'move/seed'; // Définition du topic auquel le client va s'abonner et publier.
       client.subscribe(topic, MqttQos.atMostOnce); // Abonnement au topic avec une qualité de service "atMostOnce" (Qos 0).
 
       final builder = MqttClientPayloadBuilder(); // Création d'un constructeur de payload pour le message MQTT.
-      builder.addString("1"); // Ajout du texte "Hello MQTT" comme payload du message.
+      builder.addString(data); // Ajout du texte "Hello MQTT" comme payload du message.
 
       // Publication du message sur le topic spécifié avec une qualité de service "exactlyOnce" (Qos 2).
       client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
@@ -207,6 +209,32 @@ class ServiceConnectMqtt implements ServiceConnectCmd{
       print('ERROR: MQTT client connection failed - disconnecting, status is ${client.connectionStatus}');
       client.disconnect(); // Déconnexion du client en cas d'échec de la connexion.
     }
+  }
+
+  @override
+  Future<String> configuration(data) {
+    if (this.client.connectionStatus!.state == MqttConnectionState.connected) {
+      data.forEach((key, value) {
+        print('Clé: $key, Valeur: $value');
+        String topic = (key).toString(); // Définition du topic auquel le client va s'abonner et publier.
+        client.subscribe(topic, MqttQos.atMostOnce); // Abonnement au topic avec une qualité de service "atMostOnce" (Qos 0).
+
+        final builder = MqttClientPayloadBuilder(); // Création d'un constructeur de payload pour le message MQTT.
+        builder.addString(value.toString());
+        client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
+
+      });
+     // Ajout du texte "Hello MQTT" comme payload du message.
+
+      // Publication du message sur le topic spécifié avec une qualité de service "exactlyOnce" (Qos 2).
+
+    } else {
+      // Affichage d'un message d'erreur si la connexion a échoué.
+      print('ERROR: MQTT client connection failed - disconnecting, status is ${client.connectionStatus}');
+      client.disconnect();
+      // Déconnexion du client en cas d'échec de la connexion.
+    }
+    return Future.value('ok');
   }
 
 

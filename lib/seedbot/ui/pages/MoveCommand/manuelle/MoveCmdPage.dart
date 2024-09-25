@@ -41,6 +41,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
   double _upperValue = 180;
   bool b_marche = true;
   double _progress = 90;
+  double   dir = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
             Expanded(
               child: CircularSeekBar(
                 width: double.infinity,
-              
+
                 height: 0,
                 progress: _progress,
                 barWidth: 15,
@@ -96,13 +97,13 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                         children: [
                           TextSimple(text:'${state.batterie} kg ',color: Colors.black, fontSize: 54, bold: true ),
                           TextSimple(text: "Poids des semences  ", color: Colors.black, fontSize: 24,),
-              
-              
+
+
                         ],
                       )),
                 ),
               ),
-              
+
               ),
 
 
@@ -131,7 +132,7 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                         }),
                         TextSimple(text:b_marche ? "Off" : "On", color: Colors.black),
                         _shape( IconImage(file: "assets/images/batterie.png",)),
-                      TextSimple(text: "85", color: Colors.black),
+                      TextSimple(text: "85 %", color: Colors.black),
                         _shape( IconImage(file: "assets/images/arret_urgence.png")),
 
                     ],
@@ -150,17 +151,90 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                          _shape( IconImage(file: "assets/images/d_up-left.png",)),
-                          _shape( IconImage(file: "assets/images/d_haut.png")),
-                          _shape( IconImage(file: "assets/images/d_up_right.png")),
+                          _shape( IconImage(file: "assets/images/d_up-left.png",color: (8==dir ? MyColor.c4 : Colors.black),),onTap: () {
+                                var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                                var res =   Ctrl.deplacement("8");
+                                print('responseeeeee $dir');
+                                setState(() {
+                                  dir = 8;
+                                });
+
+
+                                }),
+                          _shape( IconImage(file: "assets/images/d_haut.png",color: (1==dir ? Colors.green : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("1");
+
+                            setState(() {
+                              dir = 1;
+                            });
+
+                          },),
+                          _shape( IconImage(file: "assets/images/d_up_right.png",color: (2==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("2");
+                            setState(() {
+                              dir = 2;
+                            });
+
+
+                          },),
                         ],),        Row(children: [
-                          _shape( IconImage(file: "assets/images/d_gauche-96.png")),
-                          _shape( IconImage(file: "assets/images/stop_signal.png")),
-                          _shape( IconImage(file: "assets/images/d_droite-96.png")),
+                          _shape( IconImage(file: "assets/images/d_gauche-96.png",color: (7==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("7");
+
+                            setState(() {
+                              dir = 7;
+                            });
+
+                          },),
+                          _shape( IconImage(file: "assets/images/stop_signal.png",color: (9==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("9");
+
+                            setState(() {
+                              dir = 9;
+                            });
+
+                          },),
+                          _shape( IconImage(file: "assets/images/d_droite-96.png",color: (3==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("3");
+
+                            setState(() {
+                              dir = 3;
+                            });
+
+                          },),
                         ],),        Row(children: [
-                          _shape( IconImage(file: "assets/images/d_bas_gauch.png")),
-                          _shape( IconImage(file: "assets/images/d_bas.png")),
-                          _shape( IconImage(file: "assets/images/d_bas_droite.png")),
+                          _shape( IconImage(file: "assets/images/d_bas_gauch.png",color: (6==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("6");
+
+                            setState(() {
+                              dir = 6;
+                            });
+
+                          },),
+                          _shape( IconImage(file: "assets/images/d_bas.png",color: (5==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("5");
+
+                            setState(() {
+                              dir = 5;
+                            });
+
+                          },),
+                          _shape( IconImage(file: "assets/images/d_bas_droite.png",color: (4==dir ? MyColor.c4 : Colors.black),),onTap: (){
+                            var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                            var res = Ctrl.deplacement("4");
+                            setState(() {
+                              dir = 4;
+                            });
+
+
+                          },),
                         ],),
                       ],
                     ),
@@ -186,10 +260,12 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
 
                   SizedBox(width: 5,),
                   _shape( IconImage(file: "assets/images/bouton_labourer2.png"),onTap: (){
-                     var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
-                     Ctrl.SetSol("1");
-                     Ctrl.batterie("id");
-                  }),
+                    var Ctrl = ref.read(moveCommandCtrlProvider.notifier);
+                    var res = Ctrl.deplacement("2");
+
+
+
+                  },),
                   SizedBox(width: 5,),
                   _shape( IconImage(file: "assets/images/config_2.png",color: MyColor.c4,),onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
@@ -253,4 +329,6 @@ class _MoveCmdPAgeState extends ConsumerState<MoveCmdPage> {
     );
 
   }
-}
+
+  }
+

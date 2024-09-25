@@ -61,11 +61,18 @@ void deconnexion(String id) async{
 
 
 
-void SetSol(String id) async{
+ SetSol(String id) async{
   state = state.copyWith(isLoading: true);
   var usecase   = ref.watch(seedbotInteractorProvider).setSolUseCase;
  await usecase.run(id);
+return 'ok';
+  }
 
+ Future<String> deplacement(String id) async{
+    state = state.copyWith(isLoading: true);
+    var usecase   = ref.watch(seedbotInteractorProvider).deplacementUseCase;
+    await usecase.run(id);
+    return id;
   }
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:seedbot/seedbot/business/interactor/BatterieUseCase.dart';
+import 'package:seedbot/seedbot/business/interactor/ConfigurationUseCase.dart';
 import 'package:seedbot/seedbot/business/interactor/DeconnexionUseCase.dart';
 import 'package:seedbot/seedbot/business/interactor/DeplacementUseCase.dart';
 import 'package:seedbot/seedbot/ui/framework/ServiceConnectMqtt.dart';
@@ -28,6 +29,7 @@ class SeedbotInteractor{
   BatterieUseCase batterieUseCase;
   SetSolUseCase setSolUseCase;
   DeplacementUseCase deplacementUseCase;
+  ConfigurationUseCase configurationUseCase;
 
   SeedbotInteractor._(
       this.recupereAppareilUseCase,
@@ -38,7 +40,8 @@ class SeedbotInteractor{
       this.deconnexionUseCase,
       this.batterieUseCase,
       this.setSolUseCase,
-      this.deplacementUseCase
+      this.deplacementUseCase,
+      this.configurationUseCase
       );
 
   static SeedbotInteractor build(SeedbotService service,ServiceConnectCmd  serviceCmd){
@@ -46,7 +49,7 @@ class SeedbotInteractor{
                                 LabourerUseCase(service), MoveCommandUseCase(service),
                                 ConnectIdUseCase(serviceCmd), DeconnexionUseCase(serviceCmd),
                                 BatterieUseCase(serviceCmd), SetSolUseCase(serviceCmd),
-                                DeplacementUseCase(serviceCmd)
+                                DeplacementUseCase(serviceCmd),ConfigurationUseCase(serviceCmd)
                                   );
   }
 }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seedbot/Navigator/GoRouter.dart';
 import 'package:seedbot/Navigator/GoRouter.dart';
 import 'package:seedbot/seedbot/business/interactor/seedbotInteractor.dart';
 import 'package:seedbot/seedbot/business/service/SeedbotService.dart';
@@ -18,6 +21,8 @@ import 'package:seedbot/seedbot/ui/pages/wifi/ScanWifi.dart';
 
 
 import 'package:path/path.dart';
+import 'package:seedbot/users/business/service/usersServiceLocal.dart';
+import 'package:seedbot/users/ui/framework/userServiceImpleLocal.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,11 +56,12 @@ void main() async{
 
   SeedbotService seedbotServiceImplLocal = SeedbotServiceImplLocal();
   ServiceConnectCmd  serviceConnectMqtt = ServiceConnectMqtt();
+  UsersServiceLocal serviceLocal = UserServiceImplLocal(db);
   SeedbotInteractor seedbotInteractor = SeedbotInteractor.build(seedbotServiceImplLocal,serviceConnectMqtt);
 
 
   UserService userService = UserServiceImpleFake();
-  UserInteractor userInteractor = UserInteractor.buil(userService);
+  UserInteractor userInteractor = UserInteractor.buil(userService,serviceLocal);
 
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -68,14 +74,17 @@ void main() async{
       child: MyApp()) );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+
+class MyApp extends ConsumerWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-     // routerConfig: ref.watch(routerProvider),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
+      routerConfig: ref.watch(goRouterProvider),
       debugShowCheckedModeBanner: false,
-      home: AuthentificationPage(),
+      // home: AuthentificationPage(), // Optionnel si vous avez défini un routeur.
     );
   }
 }

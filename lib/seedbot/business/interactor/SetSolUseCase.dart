@@ -1,3 +1,5 @@
+import 'package:seedbot/seedbot/ui/framework/ServiceConnectMqtt.dart';
+
 import '../service/ServiceConnectCmd.dart';
 
 class SetSolUseCase{

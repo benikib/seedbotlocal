@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:seedbot/Navigator/GoRouter.dart';
 
 import 'package:seedbot/components/Button.dart';
 import 'package:seedbot/components/CustomAppBar.dart';
@@ -154,8 +156,9 @@ class _AuthetificationPageState extends ConsumerState<AuthentificationPage> with
       children: [
 
         Text("Pas encore de compte ?"),
+
         SizedBox(width: 10),
-        TextSimple(text: "S'enregistrer ?",onTap: (){Navigator.push(context, MaterialPageRoute(builder:(ctx)=> CreerCompte() ));}, color: MyColor.c4),
+        TextSimple(text: "S'enregistrer ?",onTap: (){context.goNamed(Urls.creercompte.name);}, color: MyColor.c4),
       ],
     );
   }

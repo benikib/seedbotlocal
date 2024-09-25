@@ -1,6 +1,10 @@
  abstract class UsersServiceLocal{
-   Future<String> recuperationUser(data);
-   //Future<String> deconnexion(data);
+   Future<bool> recuperationUser(data);
+   Future<bool> deconnexion(data);
    //Future<String> forgetPassword(data);
    //Future<String> CreerCompte(data);
+   Future<String?> recupererToken();
+   Future<bool> saveTokenCode(String data);
+   Future<bool> saveUser(Map data);
+
  }

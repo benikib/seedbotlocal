@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:seedbot/components/Button.dart';
 import 'package:seedbot/components/TextSimple.dart';
+
 import 'package:seedbot/seedbot/ui/pages/connexion/listAppareilConnect/ListAppareilConnectPage.dart';
 import 'package:seedbot/utils/MyColor.dart';
 
 import '../../../../components/TextInput.dart';
+import 'ParametreCtrl.dart';
 
 class ParametreerobotPage extends ConsumerStatefulWidget {
   const ParametreerobotPage({super.key});
@@ -20,16 +22,21 @@ class ParametreerobotPage extends ConsumerStatefulWidget {
 }
 
 class _ParametreState extends ConsumerState<ParametreerobotPage> {
-  List<String> typesemir = ["General","mais","ris","harico",] ;
-  TextEditingController _profondeurController = TextEditingController();
+  List<String> typesemir = ["Maïs","General","Harico",] ;
+  TextEditingController _distanceController = TextEditingController();
   TextEditingController _diametreController = TextEditingController();
 
   var  currentsemir ;
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-    var currentsemir ;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+      var ctrl = ref.read(parametreCtrlProvider.notifier);
+
+
+
+    });
+
   }
 
   @override
@@ -95,101 +102,20 @@ class _ParametreState extends ConsumerState<ParametreerobotPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextSimple(text: "Semir", color: Colors.black, fontSize: 24,bold: true,),
-                            Row(
 
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Premier bouton radio
-                                Row(
-
-                                  children: [
-
-                                    Radio(
-                                      value: typesemir[0],
-                                      groupValue: currentsemir,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          currentsemir = value;
-                                          print('type de semir currentsemir  $currentsemir');
-                                          print('type de semir value  ${value.toString()}');
-                                        });
-                                      },
-                                    ),
-                                    TextSimple(text: typesemir[0].toString(), color: Colors.black),
-                                  ],
-                                ),
-                                // Deuxième bouton radio
-                                Row(
-                                  children: [
-                                    Radio(
-                                      value: typesemir[1],
-                                      groupValue: currentsemir,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          currentsemir = value;
-                                          print('type de semir currentsemir  $currentsemir');
-                                          print('type de semir value  ${value.toString()}');
-                                        });
-                                      },
-                                    ),
-                                    TextSimple(text: typesemir[1].toString(), color: Colors.black),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Troisième bouton radio
-                                Row(
-                                  children: [
-                                    Radio(
-                                      value: typesemir[2],
-                                      groupValue: currentsemir,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          currentsemir = value;
-                                          print('type de semir currentsemir  $currentsemir');
-                                          print('type de semir value  ${value.toString()}');
-                                        });
-                                      },
-                                    ),
-                                    TextSimple(text: typesemir[2].toString(), color: Colors.black),
-                                  ],
-                                ),
-                                // Quatrième bouton radio
-                                Row(
-                                  children: [
-                                    Radio(
-                                      value: typesemir[3],
-                                      groupValue: currentsemir,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          currentsemir = value;
-                                          print('type de semir currentsemir  $currentsemir');
-                                          print('type de semir value  ${value.toString()}');
-                                        });
-                                      },
-                                    ),
-                                    TextSimple(text: typesemir[3].toString(), color: Colors.black),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            TextSimple(text: "Profondeur du sol", color: Colors.black, fontSize: 24,bold: true),
+                            TextSimple(text: "Distance ", color: Colors.black, fontSize: 24,bold: true),
                             TextField(
-                              controller: _profondeurController,
+                              controller: _distanceController,
 
                             ),
                             SizedBox(height: 20,),
                             TextSimple(text: "Diamètre de sortie", color: Colors.black, fontSize: 24,bold: true),
                             TextField(
-                              controller: _profondeurController,
+                              controller: _diametreController,
 
                             ),
                             SizedBox(height: 20,),
-                            TextSimple(text: "Dureté du sol", color: Colors.black, fontSize: 24,bold: true),
+
 
                           ],
                         ),
@@ -217,19 +143,17 @@ class _ParametreState extends ConsumerState<ParametreerobotPage> {
       child: Center(
         child: Column(
           children: [
-            Button(text: " Valider ", onPressed: (){},),
-            SizedBox(height: 20,),
-            GestureDetector(
-              onTap: (){
-                var data ={
+            Button(text: " Valider ", onPressed: (){
+            var Ctrl = ref.read(parametreCtrlProvider.notifier);
+                Ctrl.configuration({
                   "semir": currentsemir,
-                  "profondeur": _profondeurController.text,
-                  "diamant": _diametreController.text,
-                };
-                },
-
-              child: TextSimple(text: "Rétablir paramètres par défaut",color: Colors.black,fontSize: 20,),
-            )
+                  "distance/seed": _distanceController.text,
+                  "diametres": _diametreController.text,
+                });
+            Navigator.pop(context);
+            },),
+            SizedBox(height: 20,),
+            TextSimple(text: "Rétablir les valeurs par défaut ", color: Colors.black)
           ],
         ),
       ),
@@ -356,7 +280,7 @@ class _ParametreState extends ConsumerState<ParametreerobotPage> {
                   ),
                   TextSimple(text: "Profondeur du sol", color: Colors.black, fontSize: 24,bold: true),
                   TextField(
-                    controller: _profondeurController,
+                    controller: _distanceController,
 
                   ),
                   SizedBox(height: 20,),

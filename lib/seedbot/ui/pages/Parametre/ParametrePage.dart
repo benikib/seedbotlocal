@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seedbot/components/IconImage.dart';
 import 'package:seedbot/components/TextSimple.dart';
@@ -23,6 +23,7 @@ class _ParametrePageState extends ConsumerState<ParametrePage> {
 
 
       appBar: CustomAppBar(
+        etat: false,
         title: "Seedbot",
       ),
       body: Column(

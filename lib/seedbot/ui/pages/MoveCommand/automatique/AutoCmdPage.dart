@@ -28,143 +28,145 @@ class _AutocmdpageState extends ConsumerState<AutoCmdPage> {
       appBar: AppBar(
         title: Text("Seedbot"),
       ),
-      body: Container(
-        margin: EdgeInsets.all(20.0),
-        child: Column(
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(20.0),
+          child: Column(
 
-          children: [
+            children: [
 
-            Container(
-              height:320 ,
-              child: CircularSeekBar(
-                  width: double.infinity,
+              Container(
+                height:320 ,
+                child: CircularSeekBar(
+                    width: double.infinity,
 
-                  height: 0,
-                  progress: _progress,
-                  barWidth: 15,
-                  startAngle: 90,
-                  sweepAngle: 180,
-                  strokeCap: StrokeCap.round,
-                  progressGradientColors: const [Colors.blue, Colors.indigo, Colors.purple],
-                  dashWidth: 50,
-                  dashGap: 15,
-                  animation: true,
-                  curves: Curves.bounceOut,
-                  valueNotifier: _valueNotifier,
-                  child: Center(
-                    child: ValueListenableBuilder(
-                        valueListenable: _valueNotifier,
-                        builder: (_, double value, __) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextSimple(text:'${value} kg ',color: Colors.black, fontSize: 54, bold: true ),
-                            TextSimple(text: "Poids des semences  ", color: Colors.black, fontSize: 24,),
-                            SizedBox(height: 20,),
-                            Container(
-                              width: double.infinity,
-                              height: 50,
-
-
-                              child: ElevatedButton(onPressed: ()async{
-    final Uri _url = Uri.parse('https://flutter.dev');
-    if ( await launchUrl(_url)) {
-    throw Exception('Could not launch $_url');}
-                              }, style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black12,
-
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                )
-                              ), child: Text("Tracer une trajetoire"),)
+                    height: 0,
+                    progress: _progress,
+                    barWidth: 15,
+                    startAngle: 90,
+                    sweepAngle: 180,
+                    strokeCap: StrokeCap.round,
+                    progressGradientColors: const [Colors.blue, Colors.indigo, Colors.purple],
+                    dashWidth: 50,
+                    dashGap: 15,
+                    animation: true,
+                    curves: Curves.bounceOut,
+                    valueNotifier: _valueNotifier,
+                    child: Center(
+                      child: ValueListenableBuilder(
+                          valueListenable: _valueNotifier,
+                          builder: (_, double value, __) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextSimple(text:'${value} kg ',color: Colors.black, fontSize: 54, bold: true ),
+                              TextSimple(text: "Poids des semences  ", color: Colors.black, fontSize: 24,),
+                              SizedBox(height: 20,),
+                              Container(
+                                width: double.infinity,
+                                height: 50,
 
 
+                                child: ElevatedButton(onPressed: ()async{
+            final Uri _url = Uri.parse('https://flutter.dev');
+            if ( await launchUrl(_url)) {
+            throw Exception('Could not launch $_url');}
+                                }, style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black12,
 
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )
+                                ), child: Text("Tracer une trajetoire"),)
 
 
 
-                              ),
 
-                          ],
-                        )),
+
+
+                                ),
+
+                            ],
+                          )),
+                    ),
                   ),
-                ),
-            ),
-
-
-
-
-
-
-
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-
               ),
 
-              child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+
+
+
+
+
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+
+                ),
+
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+
+                        children: [
+
+
+                  _shape( b_marche ? IconImage(file: "assets/images/buton_on.png",) : IconImage(file: "assets/images/button_off.png",), onTap: (){
+         // var ctrl = ref.read(moveCommandCtrlProvider.notifier);
+          //b_marche? ctrl.deconnexion("cette valeur") :ctrl.connectId("cette valeur");
+          //Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
+          setState(() {
+            b_marche = !b_marche;
+            print(b_marche);
+          });}),
+                          SizedBox(height: 10,),
+                          _shapebouton( IconImage(file: "assets/images/batterie.png",)),
+                          SizedBox(height: 10,),
+                          _shapebouton( IconImage(file: "assets/images/arret_urgence.png")),
+
+                        ],
+                      ),
+
+                      Expanded(
+
+
+
+                         child: IconImage(file: "assets/images/arret_urgence.png",color: MyColor.c5,),
+
+
+
+                      )
+                    ],
+                  ),
+
+                ],
+                ),),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
 
-                      children: [
-
-
-                _shape( b_marche ? IconImage(file: "assets/images/buton_on.png",) : IconImage(file: "assets/images/button_off.png",), onTap: (){
-       // var ctrl = ref.read(moveCommandCtrlProvider.notifier);
-        //b_marche? ctrl.deconnexion("cette valeur") :ctrl.connectId("cette valeur");
-        //Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
-        setState(() {
-          b_marche = !b_marche;
-          print(b_marche);
-        });}),
-                        SizedBox(height: 10,),
-                        _shapebouton( IconImage(file: "assets/images/batterie.png",)),
-                        SizedBox(height: 10,),
-                        _shapebouton( IconImage(file: "assets/images/arret_urgence.png")),
-
-                      ],
-                    ),
-
-                    Expanded(
+                    _shapebouton(IconImage(onTap: () {print("semer");
+                    setState(() {
 
 
 
-                       child: IconImage(file: "assets/images/arret_urgence.png",color: MyColor.c5,),
+                    });},file: "assets/images/seed.png",color: MyColor.c5,)),
 
-
-
-                    )
+                    SizedBox(width: 5,),
+                    _shapebouton( IconImage(file: "assets/images/bouton_labourer2.png")),
+                    SizedBox(width: 5,),
+                    _shapebouton( IconImage(file: "assets/images/parametre.png",color: MyColor.c5,),onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
+                    }),
                   ],
                 ),
-
-              ],
-              ),),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-
-                  _shapebouton(IconImage(onTap: () {print("semer");
-                  setState(() {
-
-
-
-                  });},file: "assets/images/seed.png",color: MyColor.c5,)),
-
-                  SizedBox(width: 5,),
-                  _shapebouton( IconImage(file: "assets/images/bouton_labourer2.png")),
-                  SizedBox(width: 5,),
-                  _shapebouton( IconImage(file: "assets/images/parametre.png",color: MyColor.c5,),onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(ctx)=> ParametreerobotPage() ));
-                  }),
-                ],
               ),
-            ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );
